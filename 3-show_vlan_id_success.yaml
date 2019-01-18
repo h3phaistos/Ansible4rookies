@@ -1,0 +1,31 @@
+---
+- name: GETTING VLAN LIST
+  hosts: LAB_N5K
+  gather_facts: no
+  
+  vars:
+    # vlan_id: 10
+    vlan_id: "{{ vlan }}"
+
+  tasks:
+
+    - fail:
+        msg: "VLAN ID IS NOT DEFINED !!"
+      when: vlan is not defined
+      
+    - name: LOOKING FOR AN EXISTING VLAN JUST FOR LOOKING TO THE OUTPUT
+      nxos_command:
+        commands: 
+          - "show vlan id 1111"
+      register: result_ref
+  
+    - name: EXECUTING 'SHOW VLAN ID {{ vlan_id }}'
+      nxos_command:
+        commands: 
+          - "show vlan id {{ vlan_id }}"
+      register: result
+      failed_when: result.msg is not defined
+
+    - debug: var=result_ref
+    
+    - debug: var=result

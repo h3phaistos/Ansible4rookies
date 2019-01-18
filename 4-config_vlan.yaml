@@ -1,0 +1,42 @@
+---
+- name: GETTING VLAN LIST
+  hosts: LAB_N5K
+  gather_facts: no
+  
+  vars:
+    # vlan_id: 10
+    vlan_id: "{{ vlan }}"
+    vlan_name: Ansible_test_vlan_{{ vlan }}
+  
+  tasks:
+  
+    - fail:
+        msg: "VLAN ID IS NOT DEFINED !!"
+      when: vlan is not defined
+      
+    - name: EXECUTING 'SHOW VLAN ID {{ vlan_id }}'
+      nxos_command:
+        commands: 
+          - "show vlan id {{ vlan_id }}"
+      register: result
+      failed_when: result.msg is not defined
+      
+    - debug: var=result
+
+    - name: CONFIGURING 'VLAN {{ vlan_id }}'
+      nxos_config:
+        lines:
+          - "name {{ vlan_name }}"
+        parents: 
+          - "vlan {{ vlan_id }}"
+        diff_against: running
+      when: vlan_id|int >= 100 and vlan_id|int <= 199
+      
+    - name: EXECUTING 'SHOW VLAN ID {{ vlan_id }}'
+      nxos_command:
+        commands: 
+          - "show vlan id {{ vlan_id }}"
+      register: result
+      failed_when: 'result.msg is defined or result.stdout[0] is not defined'
+      
+    - debug: var=result.stdout[0]

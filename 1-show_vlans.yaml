@@ -1,0 +1,14 @@
+---
+- name: GETTING VLAN LIST
+  hosts: LAB_N5K
+  gather_facts: no
+  
+  tasks:
+    - name: EXECUTING SHOW COMMANDS
+      nxos_command:
+        commands: 
+          - "show vlan"
+      register: result
+      
+    - debug: var=result
+
