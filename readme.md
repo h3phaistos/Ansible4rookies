@@ -1,4 +1,8 @@
 # FIRST PLAYBOOKS...
+
+* ssh user@doublewopr.mux.isinfra.net using you TACACS account
+* git clone https://github.com/h3phaistos/Ansible4rookies.git
+
 * ## 1-show_vlans.yaml:
 	* GOAL: 'show' command on Cisco router and display the output
 	* LAUNCHING:  ansible-playbook 1-show_vlans.yaml -u <USER_ID> -k
